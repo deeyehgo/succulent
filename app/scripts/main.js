@@ -36,12 +36,11 @@
     var nextButton = document.querySelector('.button--next');
     var index = 0;
 
-    nextButton.addEventListener('click', handleClickButton);
-    previousButton.addEventListener('click', handleClickButton);
+    nextButton.addEventListener('mousedown', handleClickButton);
+    previousButton.addEventListener('mousedown', handleClickButton);
 
     // TODO: place in Nav module
     function handleClickButton(event) {
-      console.log();
       if(event.target === nextButton) {
         index += 1;
       } else {
@@ -56,6 +55,8 @@
         index = data.length - 1;
       }
 
+      console.log('click', event.target);
+
       currentImg
         .setTitle(data[index].title || '')
         .setSrc(data[index].images.hidpi || data[index].images.normal || '');
@@ -65,7 +66,6 @@
     function handlePrevious() {
       index -= 1;
       
-
       currentImg
         .setTitle(data[index].title || '')
         .setSrc(data[index].images.hidpi || data[index].images.normal || '');
@@ -79,6 +79,7 @@
     this._text = '';
     this._displayText = '';
     this._loaderElement = null;
+    this._throbberElement = null;
 
     return this;
   }
@@ -90,10 +91,14 @@
     this._text = document.createElement('div');
     this._element = document.createElement('div');
     this._loaderElement = document.createElement('div');
+    this._throbberElement = document.createElement('div');
     
+    this._text.classList.add('imageTitle');
     this._loaderElement.classList.add('loader');
+    this._throbberElement.classList.add('throbber', 'throbber--medium');
     this._img.addEventListener('load', this.handleImageLoaded.bind(this));
 
+    this._loaderElement.appendChild(this._throbberElement);
     this._element.appendChild(this._loaderElement);
     this._element.appendChild(this._text);
     this._element.appendChild(this._img);
@@ -101,8 +106,10 @@
     return this;
   };
 
-  CustomImage.prototype.handleImageLoaded = function() {
+  CustomImage.prototype.handleImageLoaded = function(event) {
     this._loaderElement.classList.remove('active');
+    this._throbberElement.classList.remove('active');
+    console.log('image loaded');
   };
 
   CustomImage.prototype.element = function() {
@@ -113,6 +120,7 @@
     this._displayText = displayText;
     this._text.innerHTML = this._displayText || '';
     this._loaderElement.classList.add('active'); // TODO: move
+    this._throbberElement.classList.add('active'); // TODO: move
     return this;
   };
 
