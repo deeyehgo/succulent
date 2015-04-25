@@ -1,6 +1,4 @@
 (function () {
-  // Fetch data
-  // TODO: parse location - query buckets?
   var accessToken = '885512ce4b18bbb6132f2c553f716838de07a5e0a49c866213946f5a092ba68e';
   var url = 'https://api.dribbble.com/v1/shots?access_token=' + accessToken;
   var xhr = new XMLHttpRequest();
@@ -9,7 +7,7 @@
   xhr.open('GET', url);
   xhr.send();
 
-  // TODO: fetch data from ls if available
+  // TODO: fetch data from localstorage if available
   function dataLoaded(event) {
     var response = this;
     // TODO: save response to localstorage
@@ -19,7 +17,6 @@
     createImageElement();  
   }
 
-  // TODO: move
   var content = document.querySelector('.content');
   function createImageElement() {
     var currentImg = new CustomImage();
@@ -29,7 +26,7 @@
       .setTitle(data[0].title || '')
       .setSrc(data[0].images.hidpi || data[0].images.normal || '');
 
-    currentImg.element().classList.add('current');
+    currentImg.element().classList.add('image');
     content.appendChild(currentImg.element());
 
     var previousButton = document.querySelector('.button--previous');
@@ -93,16 +90,17 @@
     this._loaderElement = document.createElement('div');
     this._throbberElement = document.createElement('div');
     
-    this._imgContainer.classList.add('image');
+    this._imgContainer.classList.add('image__container');
     this._text.classList.add('image__title');
     this._loaderElement.classList.add('loader');
     this._throbberElement.classList.add('throbber', 'throbber--medium');
     this._img.addEventListener('load', this.handleImageLoaded.bind(this));
 
     this._loaderElement.appendChild(this._throbberElement);
+    this._imgContainer.appendChild(this._img);
     this._element.appendChild(this._loaderElement);
     this._element.appendChild(this._text);
-    this._element.appendChild(this._img);
+    this._element.appendChild(this._imgContainer);
 
     return this;
   };
@@ -119,8 +117,8 @@
   CustomImage.prototype.setTitle = function(displayText) {
     this._displayText = displayText;
     this._text.innerHTML = this._displayText || '';
-    this._loaderElement.classList.add('active'); // TODO: move
-    this._throbberElement.classList.add('active'); // TODO: move
+    this._loaderElement.classList.add('active');
+    this._throbberElement.classList.add('active'); 
     return this;
   };
 

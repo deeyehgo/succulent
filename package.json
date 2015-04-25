@@ -27,6 +27,5 @@
     "wiredep": "^2.0.0"
   },
   "dependencies": {
-    "velocity-animate": "^1.2.2"
   }
 }

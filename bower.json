@@ -2,6 +2,5 @@
   "name": "succulent",
   "private": true,
   "dependencies": {
-    "velocity": "~1.2.2"
   }
 }
