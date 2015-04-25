@@ -1,3 +1,5 @@
+'use strict';
+
 (function () {
   var accessToken = '885512ce4b18bbb6132f2c553f716838de07a5e0a49c866213946f5a092ba68e';
   var url = 'https://api.dribbble.com/v1/shots?access_token=' + accessToken;
@@ -8,12 +10,12 @@
   xhr.send();
 
   // TODO: fetch data from localstorage if available
-  function dataLoaded(event) {
-    var response = this;
+  function dataLoaded() {
     // TODO: save response to localstorage
     // and check if xhr is needed to fetch data
-    var _data = JSON.parse(this.responseText);
-    data = _data
+    var response = this.responseText;
+    var _data = JSON.parse(response);
+    data = _data;
     createImageElement();  
   }
 
@@ -56,21 +58,12 @@
         .setTitle(data[index].title || '')
         .setSrc(data[index].images.hidpi || data[index].images.normal || '');
     }
-
-    // TODO: place in Nav module
-    function handlePrevious() {
-      index -= 1;
-      
-      currentImg
-        .setTitle(data[index].title || '')
-        .setSrc(data[index].images.hidpi || data[index].images.normal || '');
-    }
   }
 
   function CustomImage() {
     this._element = null;
     this._img = null;
-    this._imgContainer = null
+    this._imgContainer = null;
     this._src = '';
     this._text = '';
     this._displayText = '';
@@ -80,9 +73,7 @@
     return this;
   }
 
-  CustomImage.prototype.init = function(options) {
-    var options = options || {};
-
+  CustomImage.prototype.init = function() {
     this._imgContainer = document.createElement('div');
     this._img = new Image();
     this._text = document.createElement('div');
@@ -105,7 +96,7 @@
     return this;
   };
 
-  CustomImage.prototype.handleImageLoaded = function(event) {
+  CustomImage.prototype.handleImageLoaded = function() {
     this._loaderElement.classList.remove('active');
     this._throbberElement.classList.remove('active');
   };
