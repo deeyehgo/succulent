@@ -1,2 +1,2 @@
 # Succulent
-Dribbble bucket fetcher
+Dribbble bucket fetcher http://noiseisthis.github.io/succulent/
