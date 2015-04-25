@@ -41,21 +41,19 @@
 
     // TODO: place in Nav module
     function handleClickButton(event) {
-      if(event.target === nextButton) {
+      if (event.target === nextButton) {
         index += 1;
       } else {
         index -= 1;
       }
 
-      if(index > data.length - 1) {
+      if (index > data.length - 1) {
         index = 0;
       }
 
-      if(index < 0) {
+      if (index < 0) {
         index = data.length - 1;
       }
-
-      console.log('click', event.target);
 
       currentImg
         .setTitle(data[index].title || '')
@@ -74,7 +72,8 @@
 
   function CustomImage() {
     this._element = null;
-    this._img = '';
+    this._img = null;
+    this._imgContainer = null
     this._src = '';
     this._text = '';
     this._displayText = '';
@@ -87,13 +86,15 @@
   CustomImage.prototype.init = function(options) {
     var options = options || {};
 
+    this._imgContainer = document.createElement('div');
     this._img = new Image();
     this._text = document.createElement('div');
     this._element = document.createElement('div');
     this._loaderElement = document.createElement('div');
     this._throbberElement = document.createElement('div');
     
-    this._text.classList.add('imageTitle');
+    this._imgContainer.classList.add('image');
+    this._text.classList.add('image__title');
     this._loaderElement.classList.add('loader');
     this._throbberElement.classList.add('throbber', 'throbber--medium');
     this._img.addEventListener('load', this.handleImageLoaded.bind(this));
@@ -109,7 +110,6 @@
   CustomImage.prototype.handleImageLoaded = function(event) {
     this._loaderElement.classList.remove('active');
     this._throbberElement.classList.remove('active');
-    console.log('image loaded');
   };
 
   CustomImage.prototype.element = function() {
@@ -128,13 +128,5 @@
     this._src = src;
     this._img.src = this._src || '';
     return this;
-  };
-
-  CustomImage.prototype.show = function(fromRight) {
-    
-  };
-
-  CustomImage.prototype.hide = function(fromRight) {
-    
   };
 }());

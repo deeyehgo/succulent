@@ -6,9 +6,6 @@ body {
 }
 
 .content {
-  perspective: 800px;
-  perspective-origin: 50% 0;
-
   img {
     width: 100%;
   }
@@ -63,9 +60,6 @@ body {
 }
 
 .current {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
 
   .loader {
@@ -85,7 +79,7 @@ body {
   }
 }
 
-.imageTitle {
+.image__title {
   background-color: #FF604B;
   border-radius: 4px;
   color: #fff;
