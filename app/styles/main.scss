@@ -1,6 +1,13 @@
 body {
   margin: 0;
+  font-family: 'Roboto Condensed', sans-serif;
   padding: 0;
+}
+
+.content {
+  img {
+    width: 100%;
+  }
 }
 
 .button {
@@ -42,5 +49,3 @@ body {
     margin-left: 8px;
   }
 }
-
-.title

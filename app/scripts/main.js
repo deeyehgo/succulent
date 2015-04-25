@@ -5,7 +5,6 @@
   var url = 'https://api.dribbble.com/v1/buckets/266815/shots?access_token=' + accessToken;
   var xhr = new XMLHttpRequest();
   var data = {};
-  xhr.responseType = 'json';
   xhr.addEventListener('load', dataLoaded);
   xhr.open('GET', url);
   xhr.send();
@@ -15,7 +14,7 @@
     var response = this;
     // TODO: save response to localstorage
     // and check if xhr is needed to fetch data
-    var _data = JSON.parse(JSON.stringify(this.response));
+    var _data = JSON.parse(this.responseText);
     data = _data
     createImageElements();  
   }
@@ -23,67 +22,94 @@
   // TODO: move
   var content = document.querySelector('.content');
   function createImageElements() {
-    var currentImgElement = new Image();
-    var nextImgElement = new Image();
+    var currentImg = new CustomImage();
+    currentImg
+      .init()
+      .setTitle(data[0].title || '')
+      .setSrc(data[0].images.hidpi || data[0].images.normal || '');
+    content.appendChild(currentImg.element());
 
-    currentImgElement.src = data[0].images.hidpi || data[0].images.normal;
-    nextImgElement.src = data[1].images.hidpi || data[1].images.normal;
+    var nextImg = new CustomImage();
+    nextImg
+      .init()
+      .setTitle(data[1].title || '')
+      .setSrc(data[1].images.hidpi || data[1].images.normal || '');
+    content.appendChild(nextImg.element());
 
-    currentImgElement.addEventListener('load', handleImageLoaded);
-    currentImgElement.addEventListener('progress', handleImageProgress);
-    nextImgElement.addEventListener('load', handleImageLoaded);
-    nextImgElement.addEventListener('progress', handleImageProgress);
-    
-    content.appendChild(currentImgElement);
-    content.appendChild(nextImgElement);
+    var previousButton = document.querySelector('.previous');
+    var nextButton = document.querySelector('.next');
+    var index = 0;
 
+    nextButton.addEventListener('click', handleNext);
+    previousButton.addEventListener('click', handlePrevious);
 
     for (var dataItem in data) {
       if (data.hasOwnProperty(dataItem)) {
         console.log(data[dataItem]);
       }
     }
-    createTitle();
-  }
 
-  function handleImageLoaded(event) {
-    console.log('image loaded');
-  }
+    // TODO: place in Nav module
+    function handleNext() {
+      // index += 1;
+      if(index < data.length - 1) {
+        index += 1;
+      } else {
+        index = 0;
+      }
+      console.log(index, data[index].title);
+      currentImg
+        .setTitle(data[index].title || '')
+        .setSrc(data[index].images.hidpi || data[index].images.normal || '');
 
-  function handleImageProgress(event) {
-    console.log('image progress', event);
-  }
+      nextImg
+        .setTitle(data[index + 1].title || 0)
+        .setSrc(data[index + 1].images.hidpi || data[index + 1].images.normal || '');
+    }
 
-  function createTitle(text) {
-    // var titleElement = document.createElement('div');
-    // titleElement.innerHTML = text;
-    // content.appendChild(titleElement);
-    var customImg = new CustomImage();
-    customImg.init({
-      content: content,
-      displayText: data[0].title || '',
-      src: data[0].images.hidpi || data[0].images.normal || ''
-    });
-    content.appendChild(customImg.element());
-    // console.log(customImg.createTitle());
+    // TODO: place in Nav module
+    function handlePrevious() {
+      if(index > 0) {
+        index -= 1;
+      } else {
+        index = data.length - 1;
+      }
+
+      currentImg
+        .setTitle(data[index].title || '')
+        .setSrc(data[index].images.hidpi || data[index].images.normal || '');
+
+      nextImg
+        .setTitle(data[index - 1].title || 0)
+        .setSrc(data[index - 1].images.hidpi || data[index - 1].images.normal || '');
+    }
   }
 
   function CustomImage() {
     var _element = '';
+    var _img = '';
+    var _src = '';
+    var _text = '';
+    var _displayText = '';
+
+    return this;
   }
 
   CustomImage.prototype.init = function(options) {
     var options = options || {};
     
-    var content = options.content || document.body;
-    var img = new Image();
-    var titleTextElement = document.createElement('div');
+    _img = new Image();
+    _img.addEventListener('load', this.handleImageLoaded);
+    _text = document.createElement('div');
 
-    img.src = options.src || '';
-    titleTextElement.innerHTML = options.displayText || '';
     _element = document.createElement('div');
-    _element.appendChild(titleTextElement);
-    console.dir(options);
+    _element.appendChild(_text);
+    _element.appendChild(_img);
+    return this;
+  };
+
+  CustomImage.prototype.handleImageLoaded = function() {
+    console.log('image loaded');
   };
 
   CustomImage.prototype.element = function() {
@@ -91,7 +117,14 @@
   };
 
   CustomImage.prototype.setTitle = function(displayText) {
-    console.log(displayText, this.displayText);
+    _displayText = displayText;
+    _text.innerHTML = _displayText || '';
+    return this;
+  };
+
+  CustomImage.prototype.setSrc = function(src) {
+    _src = src;
+    _img.src = _src || '';
     return this;
   };
 
