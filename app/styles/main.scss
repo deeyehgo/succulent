@@ -13,7 +13,8 @@ body {
   width: 100%;
 
   img {
-    // width: 100%;
+    height: auto;
+    width: 100%;
   }
 }
 
@@ -111,11 +112,11 @@ body {
 }
 
 .throbber {
-  width: 100%;
-  height: 100%;
-  display: flex;
   align-items: center;
+  display: flex;
+  height: 100%;
   justify-content: center;
+  width: 100%;
   
   &.active {
     &:after {
@@ -124,18 +125,18 @@ body {
   }
 
   &:after {
-    transition: transform 0.4s ease;
     animation: none;
-    border-radius: 100%;
     border-bottom: 14px solid #26292C;
     border-left: 14px solid #FF604B;
     border-top: 14px solid #FF604B;
     border-right: 14px solid #26292C;
+    border-radius: 100%;
     content: '';
-    opacity: 1;
     display: block;
     height: 40px;
+    opacity: 1;
     position: relative;
+    transition: transform 0.4s ease;
     width: 40px;
   }
 }
