@@ -1,10 +1,16 @@
 'use strict';
 
 (function () {
+  var content = document.querySelector('.content');
   var accessToken = '885512ce4b18bbb6132f2c553f716838de07a5e0a49c866213946f5a092ba68e';
   var url = 'https://api.dribbble.com/v1/shots?access_token=' + accessToken;
   var xhr = new XMLHttpRequest();
   var data = {};
+  var index = 0;
+  var image = new CustomImage();
+  var previousButton = document.querySelector('.button--previous');
+  var nextButton = document.querySelector('.button--next');
+
   xhr.addEventListener('load', dataLoaded);
   xhr.open('GET', url);
   xhr.send();
@@ -16,48 +22,38 @@
     var response = this.responseText;
     var _data = JSON.parse(response);
     data = _data;
-    createImageElement();  
-  }
 
-  var content = document.querySelector('.content');
-  function createImageElement() {
-    var currentImg = new CustomImage();
-
-    currentImg
+    image
       .init()
       .setTitle(data[0].title || '')
       .setSrc(data[0].images.hidpi || data[0].images.normal || '');
 
-    currentImg.element().classList.add('image');
-    content.appendChild(currentImg.element());
-
-    var previousButton = document.querySelector('.button--previous');
-    var nextButton = document.querySelector('.button--next');
-    var index = 0;
+    image.element().classList.add('image');
+    content.appendChild(image.element());
 
     nextButton.addEventListener('mousedown', handleClickButton);
     previousButton.addEventListener('mousedown', handleClickButton);
+  }
 
-    // TODO: place in Nav module
-    function handleClickButton(event) {
-      if (event.target === nextButton) {
-        index += 1;
-      } else {
-        index -= 1;
-      }
-
-      if (index > data.length - 1) {
-        index = 0;
-      }
-
-      if (index < 0) {
-        index = data.length - 1;
-      }
-
-      currentImg
-        .setTitle(data[index].title || '')
-        .setSrc(data[index].images.hidpi || data[index].images.normal || '');
+  // TODO: place in Nav module
+  function handleClickButton(event) {
+    if (event.target === nextButton) {
+      index += 1;
+    } else {
+      index -= 1;
     }
+
+    if (index > data.length - 1) {
+      index = 0;
+    }
+
+    if (index < 0) {
+      index = data.length - 1;
+    }
+
+    image
+      .setTitle(data[index].title || '')
+      .setSrc(data[index].images.hidpi || data[index].images.normal || '');
   }
 
   function CustomImage() {
